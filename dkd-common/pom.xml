@@ -133,6 +133,20 @@
             <version>5.8.16</version>
         </dependency>
 
+        <!-- 文件上传-->
+        <dependency>
+            <groupId>org.dromara.x-file-storage</groupId>
+            <artifactId>x-file-storage-spring</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
+        <!-- 阿里云oss-->
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>3.17.4</version>
+        </dependency>
+
         <!--  lombok工具-->
         <dependency>
             <groupId>org.projectlombok</groupId>

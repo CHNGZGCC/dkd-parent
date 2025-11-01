@@ -122,7 +122,11 @@ public class VendingMachineServiceImpl implements IVendingMachineService
     @Override
     public int updateVendingMachine(VendingMachine vendingMachine)
     {
-        vendingMachine.setUpdateTime(DateUtils.getNowDate());
+        // 查询点位表，补充区域、点位、合作商信息
+        Node node = nodeService.selectNodeById(vendingMachine.getNodeId());
+        BeanUtils.copyProperties(node,vendingMachine,"id");
+        vendingMachine.setAddr(node.getAddress());//设备地址
+        vendingMachine.setUpdateTime(DateUtils.getNowDate());//更新时间
         return vendingMachineMapper.updateVendingMachine(vendingMachine);
     }
 

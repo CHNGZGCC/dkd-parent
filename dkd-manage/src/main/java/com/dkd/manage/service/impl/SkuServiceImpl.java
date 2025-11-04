@@ -64,6 +64,17 @@ public class SkuServiceImpl implements ISkuService
     }
 
     /**
+     * 批量新增商品管理
+     *
+     * @param skuList 批量商品管理
+     * @return 结果
+     */
+    @Override
+    public int insertSkuBatch(List<Sku> skuList) {
+        return skuMapper.insertSkuBatch(skuList);
+    }
+
+    /**
      * 修改商品管理
      * 
      * @param sku 商品管理

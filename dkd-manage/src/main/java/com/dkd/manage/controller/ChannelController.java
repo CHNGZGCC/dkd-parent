@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.dkd.manage.domain.Channel;
+import com.dkd.manage.domain.dto.ChannelConfigDto;
 import com.dkd.manage.domain.vo.ChannelVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,13 @@ import com.dkd.common.core.page.TableDataInfo;
 
 /**
  * 售货机货道Controller
- * 
+ *
  * @author gcc
  * @date 2025-10-31
  */
 @RestController
 @RequestMapping("/manage/channel")
-public class ChannelController extends BaseController
-{
+public class ChannelController extends BaseController {
     @Autowired
     private IChannelService channelService;
 
@@ -41,8 +41,7 @@ public class ChannelController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('manage:channel:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Channel channel)
-    {
+    public TableDataInfo list(Channel channel) {
         startPage();
         List<Channel> list = channelService.selectChannelList(channel);
         return getDataTable(list);
@@ -54,8 +53,7 @@ public class ChannelController extends BaseController
     @PreAuthorize("@ss.hasPermi('manage:channel:export')")
     @Log(title = "售货机货道", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, Channel channel)
-    {
+    public void export(HttpServletResponse response, Channel channel) {
         List<Channel> list = channelService.selectChannelList(channel);
         ExcelUtil<Channel> util = new ExcelUtil<Channel>(Channel.class);
         util.exportExcel(response, list, "售货机货道数据");
@@ -66,8 +64,7 @@ public class ChannelController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('manage:channel:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(channelService.selectChannelById(id));
     }
 
@@ -77,8 +74,7 @@ public class ChannelController extends BaseController
     @PreAuthorize("@ss.hasPermi('manage:channel:add')")
     @Log(title = "售货机货道", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Channel channel)
-    {
+    public AjaxResult add(@RequestBody Channel channel) {
         return toAjax(channelService.insertChannel(channel));
     }
 
@@ -88,8 +84,7 @@ public class ChannelController extends BaseController
     @PreAuthorize("@ss.hasPermi('manage:channel:edit')")
     @Log(title = "售货机货道", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Channel channel)
-    {
+    public AjaxResult edit(@RequestBody Channel channel) {
         return toAjax(channelService.updateChannel(channel));
     }
 
@@ -98,9 +93,8 @@ public class ChannelController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('manage:channel:remove')")
     @Log(title = "售货机货道", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(channelService.deleteChannelByIds(ids));
     }
 
@@ -109,9 +103,17 @@ public class ChannelController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('manage:channel:list')")
     @GetMapping("/list/{innerCode}")
-    public AjaxResult ListByInnerCode(@PathVariable  String innerCode){
+    public AjaxResult ListByInnerCode(@PathVariable String innerCode) {
         List<ChannelVo> channelVoList = channelService.selectChannelVoListByInnerCode(innerCode);
         return success(channelVoList);
-
+    }
+    /**
+     * 货道关联商品
+     */
+    @PreAuthorize("@ss.hasPermi('manage:channel:edit')")
+    @Log(title = "售货机货道", businessType = BusinessType.UPDATE)
+    @PutMapping("/config")
+    public AjaxResult setChannel(@RequestBody ChannelConfigDto channelConfigDto) {
+        return toAjax(channelService.setChannel(channelConfigDto));
     }
 }

@@ -122,6 +122,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
+    <update id="batchUpdateChannel" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            update tb_channel
+            <set>
+                <if test="item.channelCode != null and item.channelCode != ''">channel_code = #{item.channelCode},</if>
+                <if test="item.skuId != null">sku_id = #{item.skuId},</if>
+                <if test="item.vmId != null">vm_id = #{item.vmId},</if>
+                <if test="item.innerCode != null and item.innerCode != ''">inner_code = #{item.innerCode},</if>
+                <if test="item.maxCapacity != null">max_capacity = #{item.maxCapacity},</if>
+                <if test="item.currentCapacity != null">current_capacity = #{item.currentCapacity},</if>
+                <if test="item.lastSupplyTime != null">last_supply_time = #{item.lastSupplyTime},</if>
+                <if test="item.createTime != null">create_time = #{item.createTime},</if>
+                <if test="item.updateTime != null">update_time = #{item.updateTime},</if>
+            </set>
+            where id = #{item.id}
+        </foreach>
+    </update>
+
+
     <delete id="deleteChannelById" parameterType="Long">
         delete from tb_channel where id = #{id}
     </delete>

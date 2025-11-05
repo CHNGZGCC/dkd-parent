@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.dkd.manage.domain.Channel;
 import com.dkd.manage.domain.vo.ChannelVo;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * 售货机货道Mapper接口
@@ -83,4 +85,20 @@ public interface ChannelMapper {
      * @return
      */
     List<ChannelVo> selectChannelVoListByInnerCode(String innerCode);
+
+    /**
+     * 根据售货机编号和货道编号查询货道信息
+     * @param innerCode
+     * @param channelCode
+     * @return
+     */
+    @Select("select * from tb_channel where inner_code=#{innerCode} and channel_code=#{channelCode}")
+    Channel getChannelInfo(@Param("innerCode") String innerCode,@Param("channelCode") String channelCode);
+
+    /**
+     * 批量更新货道信息
+     * @param channelList
+     * @return
+     */
+    int batchUpdateChannel(List<Channel> channelList);
 }

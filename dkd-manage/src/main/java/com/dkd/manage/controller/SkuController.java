@@ -57,7 +57,7 @@ public class SkuController extends BaseController {
     public void export(HttpServletResponse response, Sku sku) {
         List<Sku> list = skuService.selectSkuList(sku);
         ExcelUtil<Sku> util = new ExcelUtil<Sku>(Sku.class);
-        util.exportExcel(response, list, "商品管理数据");
+        util.exportEasyExcel(response, list, "商品管理数据");
     }
 
     /**
@@ -85,9 +85,9 @@ public class SkuController extends BaseController {
     @PreAuthorize("@ss.hasPermi('manage:sku:add')")
     @Log(title = "商品管理", businessType = BusinessType.IMPORT)
     @PostMapping("/import")
-    public AjaxResult excelImport(MultipartFile file) throws IOException {
+    public AjaxResult excelImport(MultipartFile file) throws Exception {
         ExcelUtil<Sku> util = new ExcelUtil<>(Sku.class);
-        List<Sku> skuList = util.importExcel(file.getInputStream());
+        List<Sku> skuList = util.importEasyExcel(file.getInputStream());
         return toAjax(skuService.insertSkuBatch(skuList));
     }
 

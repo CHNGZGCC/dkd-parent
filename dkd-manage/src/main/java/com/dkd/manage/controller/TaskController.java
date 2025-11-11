@@ -42,8 +42,8 @@ public class TaskController extends BaseController
     public TableDataInfo list(Task task)
     {
         startPage();
-        List<Task> list = taskService.selectTaskList(task);
-        return getDataTable(list);
+        List<Task> voList = taskService.selectTaskVoList(task);
+        return getDataTable(voList);
     }
 
     /**

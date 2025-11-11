@@ -58,4 +58,11 @@ public interface ITaskService
      * @return 结果
      */
     public int deleteTaskByTaskId(Long taskId);
+
+    /**
+     * 查询工单列表
+     * @param task
+     * @return
+     */
+    List<Task> selectTaskVoList(Task task);
 }

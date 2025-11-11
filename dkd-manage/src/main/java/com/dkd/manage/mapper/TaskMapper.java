@@ -58,4 +58,11 @@ public interface TaskMapper
      * @return 结果
      */
     public int deleteTaskByTaskIds(Long[] taskIds);
+
+    /**
+     * 查询工单列表
+     * @param task
+     * @return
+     */
+    List<Task> selectTaskVoList(Task task);
 }

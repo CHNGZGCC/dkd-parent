@@ -23,13 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 设备管理Service业务层处理
- * 
+ *
  * @author gcc
  * @date 2025-10-31
  */
 @Service
-public class VendingMachineServiceImpl implements IVendingMachineService 
-{
+public class VendingMachineServiceImpl implements IVendingMachineService {
     @Autowired
     private VendingMachineMapper vendingMachineMapper;
 
@@ -44,38 +43,35 @@ public class VendingMachineServiceImpl implements IVendingMachineService
 
     /**
      * 查询设备管理
-     * 
+     *
      * @param id 设备管理主键
      * @return 设备管理
      */
     @Override
-    public VendingMachine selectVendingMachineById(Long id)
-    {
+    public VendingMachine selectVendingMachineById(Long id) {
         return vendingMachineMapper.selectVendingMachineById(id);
     }
 
     /**
      * 查询设备管理列表
-     * 
+     *
      * @param vendingMachine 设备管理
      * @return 设备管理
      */
     @Override
-    public List<VendingMachine> selectVendingMachineList(VendingMachine vendingMachine)
-    {
+    public List<VendingMachine> selectVendingMachineList(VendingMachine vendingMachine) {
         return vendingMachineMapper.selectVendingMachineList(vendingMachine);
     }
 
     /**
      * 新增设备管理
-     * 
+     *
      * @param vendingMachine 设备管理
      * @return 结果
      */
     @Transactional
     @Override
-    public int insertVendingMachine(VendingMachine vendingMachine)
-    {
+    public int insertVendingMachine(VendingMachine vendingMachine) {
         //新增设备
         //生成8位唯一标识，生成货道编号
         String innerCode = UUIDUtils.getUUID();
@@ -85,7 +81,7 @@ public class VendingMachineServiceImpl implements IVendingMachineService
         vendingMachine.setChannelMaxCapacity(vmType.getChannelMaxCapacity());
         //查询点位表，补充：区域、点位、合作商信息
         Node node = nodeService.selectNodeById(vendingMachine.getNodeId());
-        BeanUtils.copyProperties(node,vendingMachine,"id");// 商圈类型、合作商、区域
+        BeanUtils.copyProperties(node, vendingMachine, "id");// 商圈类型、合作商、区域
         vendingMachine.setAddr(node.getAddress());
         //设备状态
         vendingMachine.setVmStatus(DkdContants.VM_STATUS_NODEPLOY);//0-未投放
@@ -94,12 +90,12 @@ public class VendingMachineServiceImpl implements IVendingMachineService
         //保存信息
         int result = vendingMachineMapper.insertVendingMachine(vendingMachine);
         //新增货道
-        List<Channel> channelList=new ArrayList<>();
-        for (int i = 1; i <vmType.getVmRow() ; i++) {
-            for (int j = 1; j <vmType.getVmCol() ; j++) {
+        List<Channel> channelList = new ArrayList<>();
+        for (int i = 1; i < vmType.getVmRow(); i++) {
+            for (int j = 1; j < vmType.getVmCol(); j++) {
                 //封装channel对象
                 Channel channel = new Channel();
-                channel.setChannelCode(i+"-"+j);//货道编号
+                channel.setChannelCode(i + "-" + j);//货道编号
                 channel.setVmId(vendingMachine.getId());//售货机id
                 channel.setInnerCode(vendingMachine.getInnerCode());//售货机编号
                 channel.setMaxCapacity(vmType.getChannelMaxCapacity());//货道最大容量
@@ -115,17 +111,16 @@ public class VendingMachineServiceImpl implements IVendingMachineService
 
     /**
      * 修改设备管理
-     * 
+     *
      * @param vendingMachine 设备管理
      * @return 结果
      */
     @Override
-    public int updateVendingMachine(VendingMachine vendingMachine)
-    {
-        if (vendingMachine.getNodeId()!=null) {
+    public int updateVendingMachine(VendingMachine vendingMachine) {
+        if (vendingMachine.getNodeId() != null) {
             // 查询点位表，补充区域、点位、合作商信息
             Node node = nodeService.selectNodeById(vendingMachine.getNodeId());
-            BeanUtils.copyProperties(node,vendingMachine,"id");
+            BeanUtils.copyProperties(node, vendingMachine, "id");
             vendingMachine.setAddr(node.getAddress());//设备地址
         }
         vendingMachine.setUpdateTime(DateUtils.getNowDate());//更新时间
@@ -134,25 +129,34 @@ public class VendingMachineServiceImpl implements IVendingMachineService
 
     /**
      * 批量删除设备管理
-     * 
+     *
      * @param ids 需要删除的设备管理主键
      * @return 结果
      */
     @Override
-    public int deleteVendingMachineByIds(Long[] ids)
-    {
+    public int deleteVendingMachineByIds(Long[] ids) {
         return vendingMachineMapper.deleteVendingMachineByIds(ids);
     }
 
     /**
      * 删除设备管理信息
-     * 
+     *
      * @param id 设备管理主键
      * @return 结果
      */
     @Override
-    public int deleteVendingMachineById(Long id)
-    {
+    public int deleteVendingMachineById(Long id) {
         return vendingMachineMapper.deleteVendingMachineById(id);
+    }
+
+    /**
+     * 根据设备编号查询设备信息
+     *
+     * @param innerCode
+     * @return
+     */
+    @Override
+    public VendingMachine selectVendingMachineByInnerCode(String innerCode) {
+        return vendingMachineMapper.selectVendingMachineByInnerCode(innerCode);
     }
 }

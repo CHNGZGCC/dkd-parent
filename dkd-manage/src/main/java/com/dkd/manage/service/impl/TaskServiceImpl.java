@@ -192,6 +192,33 @@ public class TaskServiceImpl implements ITaskService {
         return taskResult;
     }
 
+    /**
+     * 取消工单
+     * @param task
+     * @return
+     */
+    @Override
+    public int cancelTask(Task task) {
+        //判断工单状态是否可以取消
+        //先根据工单id查询数据库
+        Task taskDb = taskMapper.selectTaskByTaskId(task.getTaskId());
+        //判断工单状态是否为已取消，如果是，则抛出异常
+        if (taskDb.getTaskStatus().equals(DkdContants.TASK_STATUS_CANCEL)) {
+            throw new ServiceException("工单已取消，不能再次取消");
+        }
+        //判断工单状态是否为已完成，如果是，则抛出异常
+        if (taskDb.getTaskStatus().equals(DkdContants.TASK_STATUS_FINISH)) {
+            throw new ServiceException("工单已完成，不能取消");
+        }
+
+        //设置更新字段
+        task.setTaskStatus(DkdContants.TASK_STATUS_CANCEL);
+        task.setUpdateTime(DateUtils.getNowDate());
+
+        //更新工单
+        return taskMapper.updateTask(task);
+    }
+
     //生成并获取当天工单编号（唯一标识）
     private String generateTaskCode() {
         //获取当前日期并格式化为“yyyyMMdd”
